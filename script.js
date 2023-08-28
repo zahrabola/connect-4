@@ -21,6 +21,33 @@ let currentP;
 const generateRandomnum = (min, max) => 
 Math.floor(Math.random() * (max - min)) + min;
 
+// win check logic 
+
+// set circles t0 exact point -6
+const setPiece = (startCount, colValue) => {
+    let rows = document.querySelectorAll(".grid-row");
+  //Initially it will place the circles in the last
+  // row else if no place availabke we will decrement the count until we find empty slot  
+if(initialMatrix[startCount][colValue] != 0 ){
+    startCount -=1;
+    setPiece(startCount, colValue);
+} else {
+    //place circle
+    let currentRow = rows[startCount].querySelectorAll(".grid-row")
+    currentRow[colValue].classList.add("filled", `player${currentP}`)
+    //update matrix 
+    initialMatrix[startCount][colValue] = currentP
+    //Check for wins
+    if(winCheck(startCount, colValue)){
+        message.innerHTML = `Player<span> ${currentP}</span> wins`;
+        startscreen.classList.remove("hide");
+        return false
+    }
+}
+// check if all are full
+gameOverCheck();
+}
+
 //when user clicks on circle hole -5
 const fillBox = (e) => {
     ///get column value
@@ -28,7 +55,7 @@ const fillBox = (e) => {
     //5 because we have 6 row (0-5)
     setPiece(5, colValue);
     currentP = currentP == 1 ? 2 : 1;
-    playerturn.innerHTML =`Player <span>${currentPlayer}'s</span> turn`;
+    playerturn.innerHTML =`Player <span>${currentP}'s</span> turn`;
 }
 
 ///create matrix -4
@@ -57,5 +84,5 @@ window.onload =startGame = async () => {
     currentP = generateRandomnum(1, 3);
     container.innerHTML= "";
     await matrixCreator();
-    playerturn.innerHTML =`Player <span>${currentP} turn</span.`
+    playerturn.innerHTML =`Player <span>${currentP} turn</span>.`
 }
