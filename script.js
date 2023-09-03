@@ -70,7 +70,30 @@ const getRightDiagonal = (row, column, rowLength, columnLength) => {
 return rightDiagonal
 };
 // get left diagonal values -12
- const 
+ const getLeftDiagonal = (row, column, rowLength, columnLength) => {
+    let rowCount = row;
+    let columnCount = column;
+    let leftDiagonal = [];
+    while (rowCount > 0) {
+        if (columnCount <= 0){
+            break;
+        }
+        rowCount -= 1;
+        columnCount -= 1;
+        leftDiagonal.unshift(initialMatrix[rowCount][columnCount]);
+    }
+    rowCount = row;
+    columnCount = column;
+    while (rowCount < rowLength){
+        if ( columnCount >= columnLength) {
+            break
+        }
+        leftDiagonal.push(initialMatrix[rowCount][columnCount]);
+        rowCount += 1;
+        columnCount += 1;
+    }
+    return leftDiagonal;
+ }
 // check diagonal - 10
 const checkadjacentDiagonalValues = ( row, column) => {
     let diagonalWinBoolean = false;
