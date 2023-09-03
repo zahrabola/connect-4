@@ -21,7 +21,92 @@ let currentP;
 const generateRandomnum = (min, max) => 
 Math.floor(Math.random() * (max - min)) + min;
 
-// win check logic 
+
+//Check rows -8
+const checkadjacentRowValues = (row) => {
+    return verifyArray(initialMatrix[row]);
+  };
+  //check column -9 
+  const checkadjacentColumnValues = (column) => {
+    let colWinCount = 0,
+    colWinBoolean = false;
+    initialMatrix.forEach((element, index) => {
+        if (element[column] == currentP){
+            colWinCount += 1;
+            if (colWinCount == 4){
+                colWinBoolean = true
+            }
+        } else {
+            colWinBoolean = true
+        }
+    });
+    //no match
+    return colWinBoolean;
+  }
+
+  // get right diagonal values  -11
+const getRightDiagonal = (row, column, rowLength, columnLength) => {
+  let rowCount = row;
+  let columnCount = column;
+  let rightDiagonal = [];
+  while (rowCount > 0 ){
+    if (columnCount >= columnLength -1){
+        break;
+    }
+    rowCount -= 1;
+    columnCount += 1;
+    rightDiagonal.unshift(initialMatrix[rowCount][columnCount]);
+  }
+  rowCount = row;
+  columnCount = column;
+  while (rowCount < rowLength){
+    if (columnCount < 0){
+        break
+    }
+    rightDiagonal.push(initialMatrix[rowCount][columnCount]);
+    rowCount += 1;
+    columnCount += 1
+  }
+return rightDiagonal
+};
+// get left diagonal values -12
+ const 
+// check diagonal - 10
+const checkadjacentDiagonalValues = ( row, column) => {
+    let diagonalWinBoolean = false;
+    let tempChecks = {
+        leftTop: [],
+        rightTop: [],
+    };
+    let columnLength = initialMatrix[row].length;
+    let rowLength = initialMatrix.length;
+
+    // store left and right diagonal array
+    tempChecks.leftTop = [
+        ...getLeftDiagonal(row, column, rowLength, columnLength)
+    ];
+    tempChecks.rightTop = [
+        ...getRightDiagonal(row, column, rowLength, columnLength)
+    ];
+      //check both arrays for similarities
+      diagonalWinBoolean = verifyArray(tempChecks. rightTop);
+      if (!diagonalWinBoolean) {
+        diagonalWinBoolean = verifyArray(tempChecks.leftTop);
+
+      }
+return diagonalWinBoolean
+}
+
+// win check logic - 7
+const winCheck = (row, column) => {
+ //if any of the functions return true we return true
+ return checkadjacentRowValues (row)
+ ? true
+ : checkadjacentColumnValues (column)
+ ? true 
+ : checkadjacentDiagonalValues (row, column)
+ ? true : false;
+}
 
 // set circles t0 exact point -6
 const setPiece = (startCount, colValue) => {
@@ -33,8 +118,8 @@ if(initialMatrix[startCount][colValue] != 0 ){
     setPiece(startCount, colValue);
 } else {
     //place circle
-    let currentRow = rows[startCount].querySelectorAll(".grid-row")
-    currentRow[colValue].classList.add("filled", `player${currentP}`)
+    let currentRow = rows[startCount].querySelectorAll(".grid-box")
+    currentRow[colValue].classList.add("filled", `player${currentP}`);
     //update matrix 
     initialMatrix[startCount][colValue] = currentP
     //Check for wins
@@ -51,7 +136,7 @@ gameOverCheck();
 //when user clicks on circle hole -5
 const fillBox = (e) => {
     ///get column value
-    let colValue = parseInt(e.target.getAttributre("data-value"));
+    let colValue = parseInt(e.target.getAttribute("data-value"));
     //5 because we have 6 row (0-5)
     setPiece(5, colValue);
     currentP = currentP == 1 ? 2 : 1;
