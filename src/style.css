@@ -30,8 +30,9 @@ body{
     display: flex;
     align-items: center;
     flex-direction: column;
-
+    cursor: pointer;
 }
+
 .Player-1:before{
     content: "";
     display: inline-block;
